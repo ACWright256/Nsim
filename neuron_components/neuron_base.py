@@ -41,7 +41,7 @@ class NeuronBase:
         self.parent_ids=parent_ids
         self.child_ids=child_ids
 
-    def update(self, cycle_cnt):
+    def update(self):
         """"""
         if self.tx_off_cnt==self.tx_off_period and self.is_rx_met == True:
             #Is now possible to go to the ON state
@@ -64,8 +64,6 @@ class NeuronBase:
         else:
             self.tx_on_cnt=0
             self.tx_off_cnt = (self.tx_off_cnt+1)%(self.tx_off_period+1)
-
-
 
     def _update_nt_stores(self, transmitter_dict:dict[str,int]):
         """Update transmitter stores"""
@@ -111,3 +109,15 @@ class NeuronBase:
             self._update_nt_stores(transmitter_dict=reuptake_dict)
     def get_state(self):
         """Puts all the nice state information into a dataframe :)"""
+        base_array=[self.is_rx_met, self.tx_off_period, self.tx_off_cnt, self.tx_on_period, self.tx_on_cnt, self.neuron_state]
+        base_array_index=["is_rx_met", "tx_off_period", "tx_off_cnt", "tx_on_period", "tx_on_cnt", "neuron_state"]
+        base_series=pd.Series(data=base_array, index=base_array_index)
+        junction_series = self.input_junction.get_state()
+        tx_array_vals=[]
+        tx_array_index=[]
+        for tx_key in self.transmitters.keys():
+            tx_array_index.append(f"Transmitter_{tx_key}")
+            tx_array_vals.append(self.transmitters[tx_key].stores)
+        tx_series=pd.Series(data=tx_array_vals, index=tx_array_index)
+        state_series=pd.concat([base_series, junction_series, tx_series])
+        return state_series

@@ -14,7 +14,7 @@ def load_generation_file(file_name:str):
         neuron_file = yaml.safe_load(file)
     return neuron_file
 
-def create_net_from_file(neuron_dict:dict):
+def create_net_from_file(neuron_dict:dict) -> dict[int,NeuronBase]:
     object_dict:{}
     id_list_full=neuron_dict.keys()
     id_list_numeric=[ int(uid[3:]) for uid in id_list_full]

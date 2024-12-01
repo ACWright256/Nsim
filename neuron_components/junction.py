@@ -1,3 +1,4 @@
+import pandas as pd
 from .neuron_base import NeuronBase
 from dataclasses import dataclass
 from .neurotransmitters import NeuroTransmitter, NT_dict
@@ -40,3 +41,7 @@ class NeuronJunction:
             removed=int(nt_class.degradation_coef*self._junction_stores[nt])
             self.update_stores(nt, -1*removed)
     #def update(self):
+    def get_state(self):
+        stores_list=list([f"Junction_{junc}" for junc in _junction_stores.keys()])
+        pd_series = pd.Series(data=list(_junction_stores.values()), index= stores_list)
+        return pd_series
