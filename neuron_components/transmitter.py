@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from .neurotransmitters import NeuroTransmitter
-from .minimal_classes import TransmissionToken
 import numpy as np
 
 @dataclass
@@ -11,7 +10,7 @@ class Transmitter:
     transmission_strength_stdev: int #standard deviation of strengths
     regeneration_constant:int #how much per delta time the stores regenerate
     stores: int #how much "juice" the parent neuron has for this particular associated NT
-    name:str = ntransmit.name #name of receptor is name of ntransmitter
+    #name:str = ntransmit.name #name of receptor is name of ntransmitter
 
     def transmit(self):
         """
@@ -20,7 +19,7 @@ class Transmitter:
         Transmission will not occur if stores are depleted
         """
         current_tx_strength = np.random.normal(loc=self.transmission_strength, scale=self.transmission_strength_stdev)
-        tx_val = max(current_tx_strength,stores)
+        tx_val = min(current_tx_strength,self.stores)
         self.update_stores(-1*tx_val)
         return tx_val
         #if self.transmission_str > stores:

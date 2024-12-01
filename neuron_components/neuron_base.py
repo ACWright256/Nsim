@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from .receptor import Receptor
 from.transmitter import Transmitter
-from .minimal_classes import ReceptionToken, TransmissionToken
 from .junction import NeuronJunction
 from enum import Enum
 import pandas as pd
@@ -17,22 +16,22 @@ class NeuronBase:
     uid: int #unique identifier
     input_cnt:int
     output_cnt:int
-    parent_uids:list[int]=[]
-    child_uids:list[int]=[]
+    parent_uids:list[int]
+    child_uids:list[int]
 
     receive_sensitivity: int #Threshold required to be overcome to generate an action potential
     receptors: dict[str, Receptor] #nt names and receptor type
     transmitters: dict[str,Transmitter]
 
-    input_junction: NeuronJunction = None
-    output_junctions: list[NeuronJunction] = {} #every other neuron connected to
-    neuron_state: NeuronState
-
+    #neuron_state: NeuronState
+    neuron_state: int
     is_rx_met: bool #whether or not the neuron is currently currently firing for the current cycle
     tx_off_period:int
-    tx_off_cnt:int=0
     tx_on_period: int
+    output_junctions: list[NeuronJunction] #every other neuron connected to
     tx_on_cnt: int=0
+    tx_off_cnt:int=0
+    input_junction: NeuronJunction = None
 
     def post_init(junction_list:list[NeuronJunction], input_junction:NeuronJunction, parent_ids:list[int], child_ids:list[int]):
         #Done after the creation of the neurons, to help get the conntions right
@@ -43,27 +42,33 @@ class NeuronBase:
 
     def update(self):
         """"""
-        if self.tx_off_cnt==self.tx_off_period and self.is_rx_met == True:
+        #print("self.neuron_state ",self.neuron_state)
+        #print(self.is_rx_met)
+        #print("off",self.tx_off_cnt)
+        #print("on",self.tx_on_cnt)
+
+        if self.tx_off_cnt>=self.tx_off_period and self.is_rx_met == True:
             #Is now possible to go to the ON state
             #self.tx_off_cnt=0
-            self.neuron_state = NeuronState.ON
+            self.neuron_state = NeuronState.ON.value
         elif self.tx_on_cnt == self.tx_on_period:
             #must return to the off state, regardless if rx is met
             #self.tx_on_cnt=0
             #self.tx_off_cnt=0
-            self.neuron_state = NeuronState.OFF
+            self.neuron_state = NeuronState.OFF.value
 
-        self._update_junctions_tx()
         self._update_rx()
+        self._update_junctions_tx()
         self._maintenance_update()
         #self._reuptake()
 
-        if self.neuron_state == NeuronState.ON:
+        if self.neuron_state == NeuronState.ON.value:
             self.tx_off_cnt=0
             self.tx_on_cnt = (self.tx_on_cnt+1)% (self.tx_off_period+1)
         else:
             self.tx_on_cnt=0
-            self.tx_off_cnt = (self.tx_off_cnt+1)%(self.tx_off_period+1)
+            #self.tx_off_cnt = (self.tx_off_cnt+1)%(self.tx_off_period+1)
+            self.tx_off_cnt = (self.tx_off_cnt+1)
 
     def _update_nt_stores(self, transmitter_dict:dict[str,int]):
         """Update transmitter stores"""
@@ -76,7 +81,8 @@ class NeuronBase:
         for nt_name in self.receptors.keys():
             nt_count_junc = self.input_junction.get_junction_store(nt_name)
             potential_count =  potential_count + self.receptors[nt_name].receive(nt_count_junc)
-        if potential_count >= receive_sensitivity:
+        print("potential_count",potential_count)
+        if potential_count >= self.receive_sensitivity:
             self.is_rx_met=True
         else:
             self.is_rx_met=False
@@ -85,10 +91,11 @@ class NeuronBase:
         """
         Adds neurotransmitters to the junction from the tranmitter, if transmission is occurring
         """
-        if self.neuron_state==NeuronState.ON:
+        if self.neuron_state==NeuronState.ON.value:
             for tx_key in self.transmitters.keys():
                 tx=self.transmitters[tx_key]
                 tx_count = tx.transmit()
+                print("tx_count",tx_count)
                 tx_per_junc = tx_count//len(self.output_junctions)
                 for junction in self.output_junctions:
                     junction.update_stores(tx_key,tx_per_junc)

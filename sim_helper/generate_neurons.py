@@ -15,13 +15,13 @@ def load_generation_file(file_name:str):
     return neuron_file
 
 def create_net_from_file(neuron_dict:dict) -> dict[int,NeuronBase]:
-    object_dict:{}
-    id_list_full=neuron_dict.keys()
+    object_dict={}
+    id_list_full=list(neuron_dict.keys())
     id_list_numeric=[ int(uid[3:]) for uid in id_list_full]
     #Phase 1: Generate all the constants
-    for idx, uid in enumerate(id_list_full):
-        uid_key=id_list_full['idx']
-        cur_neuron=neuron_dict['uid_key']
+    for idx, uid in enumerate(id_list_numeric):
+        uid_key=id_list_full[idx]
+        cur_neuron=neuron_dict[uid_key]
         sensitivity=cur_neuron['sensitivity']
         input_cnt=cur_neuron['input_cnt']
         output_cnt=cur_neuron['output_cnt']
@@ -44,7 +44,7 @@ def create_net_from_file(neuron_dict:dict) -> dict[int,NeuronBase]:
             cur_recep=cur_receptors_list[recep]
             response_type=cur_recep['response_type']
             input_sensitivity=cur_recep['input_sensitivity']
-            max_response_strength=cur_recep['input_sensitivity']
+            max_response_strength=cur_recep['max_response_strength']
             receptors_dict[recep]=Receptor(ntransmit=NT_dict[recep],
                                             response_type=response_type,
                                             input_sensitivity=input_sensitivity,
