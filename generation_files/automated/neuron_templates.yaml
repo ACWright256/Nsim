@@ -1,0 +1,17 @@
+basket_ish:
+  min_sensitivity: 100
+  max_sensitivity: 200
+  min_input_cnt: 5
+  max_input_cnt: 20
+  min_output_cnt: 1
+  max_output_cnt: 3
+  valid_transmitter_types: ["slow_regen_high_tx"]
+  valid_receptor_types: ["dull_excitory_stronk_rx", "dull_inhibitory_stronk_rx"]
+  tx_neurotransmitter_types: ["WumbusNT", "DiabolicalDastardlyNT","SomberSwanNT"]
+  rx_neurotransmitter_types: ["WumbusNT", "DiabolicalDastardlyNT","SomberSwanNT"]
+  length: 10
+  duty_cycle: 25
+  initial_junc_stores:
+    WumbusNT: 100
+    DiabolicalDastardlyNT: 100
+    SomberSwanNT: 100

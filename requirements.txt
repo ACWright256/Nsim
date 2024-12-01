@@ -1,0 +1,6 @@
+numpy
+scipy
+pandas
+bokeh
+colorcet
+PyYAML

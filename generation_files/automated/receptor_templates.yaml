@@ -1,0 +1,39 @@
+sensitive_inhibitory_stronk_rx:
+  response_type: "INHIBITORY"
+  input_sensitivity: 1.0
+  max_response_strength: 500
+
+sensitive_excitory_stronk_rx:
+  response_type: "EXCITORY"
+  input_sensitivity: 1.0
+  max_response_strength: 500
+
+mid_excitory_rx:
+  response_type: "EXCITORY"
+  input_sensitivity: 0.5
+  max_response_strength: 50
+
+mid_inhibitory_rx:
+  response_type: "INHIBITORY"
+  input_sensitivity: 0.5
+  max_response_strength: 50
+
+dull_inhibitory_stronk_rx:
+  response_type: "INHIBITORY"
+  input_sensitivity: 0.01
+  max_response_strength: 10000
+
+dull_excitory_stronk_rx:
+  response_type: "EXCITORY"
+  input_sensitivity: 0.01
+  max_response_strength: 10000
+
+sensitive_weak_inhibitory_rx:
+  response_type: "INHIBITORY"
+  input_sensitivity: 1.0
+  max_response_strength: 10
+
+sensitive_weak_excitroy_rx:
+  response_type: "EXCITORY"
+  input_sensitivity: 1.0
+  max_response_strength: 10

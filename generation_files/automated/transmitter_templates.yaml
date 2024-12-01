@@ -1,0 +1,18 @@
+quick_regen_low_tx:
+  regeneration_constant: 100
+  transmission_strength: 10
+  transmission_strength_stdev: 5
+  initial_stores: 10
+
+
+slow_regen_high_tx:
+  regeneration_constant: 5
+  transmission_strength: 200
+  transmission_strength_stdev: 50
+  initial_stores: 10
+
+mid_regen_mid_tx:
+  regeneration_constant: 50
+  transmission_strength: 50
+  transmission_strength_stdev: 10
+  initial_stores: 10
